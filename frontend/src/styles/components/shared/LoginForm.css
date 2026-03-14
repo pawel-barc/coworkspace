@@ -1,0 +1,84 @@
+/* Styles for Login component */
+@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap");
+
+.user-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: rgb(253, 253, 253);
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  width: clamp(280px, 70vw, 600px);
+  margin: 2vw auto;
+  padding: 1vw;
+}
+
+.user-form > h1 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  letter-spacing: 4px;
+  font-size: clamp(20px, 3vw, 36px);
+}
+
+.user-form label {
+  display: flex;
+  flex-direction: column;
+  width: clamp(250px, 20vw, 500px);
+  font-size: clamp(14px, 2vw, 18px);
+}
+
+input::placeholder {
+  font-style: italic;
+  font-weight: 200;
+  font-size: clamp(14px, 2vw, 16px);
+  color: rgb(187, 184, 184);
+  font-family: "Times New Roman", Times, serif;
+}
+.user-btn {
+  width: clamp(140px, 40vw, 200px);
+  background-color: #0353a4;
+  color: white;
+  font-weight: bold;
+  font-size: clamp(14px, 2vw, 20px);
+  letter-spacing: 2px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+.user-btn:hover {
+  transform: scale(1.02);
+  transition:
+    transform 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+}
+.user-form > strong {
+  margin-top: 2vw;
+}
+
+.register-icon {
+  color: rgb(48, 153, 223);
+  font-size: 25px;
+  margin-top: 20px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.register-icon:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.error {
+  color: rgb(235, 63, 6);
+  font-size: 15px;
+  font-family: monospace;
+}
+
+.error-message {
+  color: rgb(235, 63, 6);
+  font-size: 15px;
+  font-family: monospace;
+  margin: 20px;
+}

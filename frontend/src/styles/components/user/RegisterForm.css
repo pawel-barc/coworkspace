@@ -1,0 +1,43 @@
+.user-form > h1 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  letter-spacing: 4px;
+  font-size: clamp(20px, 3vw, 36px);
+}
+
+.user-form label {
+  display: flex;
+  flex-direction: column;
+  width: clamp(250px, 20vw, 500px);
+}
+.user-form label h2 {
+  font-size: clamp(14px, 3vw, 18px);
+  font-weight: 100;
+  color: black;
+}
+.user-form input {
+  padding: 12px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid #0353a4;
+}
+
+input::placeholder {
+  font-style: italic;
+  font-weight: 200;
+  font-size: 16px;
+  color: rgb(187, 184, 184);
+  font-family: "Times New Roman", Times, serif;
+}
+
+.user-btn {
+  width: clamp(120px, 40vw, 200px);
+  background-color: #0353a4;
+  color: white !important;
+  font-weight: bold;
+  font-size: clamp(16px, 2vw, 20px);
+  letter-spacing: 2px;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px !important;
+  margin-top: 50px;
+}
