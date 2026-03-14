@@ -6,9 +6,11 @@ import (
 
 	// "os"
 
+	"coworkspace/controllers"
 	"coworkspace/db"
 	"coworkspace/repositories"
 	"coworkspace/routes"
+	"coworkspace/services"
 )
 
 func main() {
@@ -18,7 +20,9 @@ func main() {
 	repositories.SpaceRepo = &repositories.SpaceRepository{DB: db.DB}
 	repositories.EquipmentRepo = &repositories.EquipmentRepository{DB: db.DB,}
 	repositories.DeskRepo = &repositories.DeskRepository{DB: db.DB,}
-
+	reservationRepo := &repositories.ReservationRepository{DB: db.DB}
+	reservationService := &services.ReservationService{Repo: reservationRepo}
+	controllers.ReservationService = reservationService
 	// ----------------------------
 	// MIGRATION: création de la base des données
 	// ----------------------------

@@ -25,6 +25,8 @@ func SetupRouter() http.Handler {
 	r.Post("/refresh-token", controllers.RefreshToken) // Rafraîchissement du token
 	r.Get("/verify-email", controllers.VerifyEmail)    // Vérification email
 	r.Get("/spaces/{id}/full", controllers.GetFullSpace)  // Les espaces mis en publique
+	r.Post("/reservations", controllers.CreateReservation)
+
 
 	// ----- ROUTES POUR TOUS LES UTILISATEURS CONNECTÉS -----
 	r.Group(func(r chi.Router) {

@@ -65,6 +65,16 @@ CREATE TABLE desk (
 
 CREATE INDEX idx_desk_space_id ON desk(space_id);
 
+
+-- ==========================
+-- Enum type pour le type d'espace
+-- ==========================
+CREATE TYPE reservation_status AS ENUM (
+    'pending',
+    'confirmed',
+    'cancelled'
+);
+
 -- ==========================
 -- Table des réservations
 -- ==========================
