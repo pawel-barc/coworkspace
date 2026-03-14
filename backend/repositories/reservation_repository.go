@@ -4,6 +4,7 @@ import (
 	"coworkspace/dto"
 	"coworkspace/models"
 	"database/sql"
+	"errors"
 	"time"
 )
 
@@ -91,4 +92,39 @@ func (r *ReservationRepository) GetByUserID(userID int) ([]models.Reservation, e
 	}
 
 	return reservations, nil
+}
+
+func (repo *ReservationRepository) Update(res models.Reservation) error {
+	result, err := repo.DB.Exec(`
+		UPDATE reservation
+		SET start_at=$1, end_at=$2, title=$3, notes=$4, visibility=$5, updated_at=NOW()
+		WHERE id=$6 AND user_id=$7
+	`, res.StartAt, res.EndAt, res.Title, res.Notes, res.Visibility, res.ID, res.UserID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return errors.New("Reservation non trouvée ou non autorisée")
+	}
+
+	return nil
+}
+
+func (repo *ReservationRepository) Delete(resID int, userID int) error {
+	result, err := repo.DB.Exec(`
+		DELETE FROM reservation
+		WHERE id=$1 AND user_id=$2
+	`, resID, userID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return errors.New("Reservation non trouvée ou non autorisée")
+	}
+
+	return nil
 }

@@ -29,9 +29,12 @@ func SetupRouter() http.Handler {
 	// Les espaces
 	r.Get("/spaces/{id}/full", controllers.GetFullSpace)  // Les espaces mis en publique
 
-	// Réservations
+	// Réservations user
+
 	r.Post("/reservations", controllers.CreateReservation)
 	r.Get("/reservations", controllers.GetUserReservations)
+	r.Patch("/reservations/{id}", controllers.UpdateReservation)
+	r.Delete("/reservations/{id}", controllers.DeleteReservation)
 
 	// ----- ROUTES POUR TOUS LES UTILISATEURS CONNECTÉS -----
 	r.Group(func(r chi.Router) {
@@ -78,6 +81,7 @@ func SetupRouter() http.Handler {
 		r.Get("/admin/desks/{id}", controllers.GetDeskByID)
 		r.Patch("/admin/desks/{id}", controllers.UpdateDesk)
 		r.Delete("/admin/desks/{id}", controllers.DeleteDesk)
+
 
 		// Exemple: gestion des utilisateurs et espaces par l'admin
 		// r.Get("/admin/users", controllers.AdminListUsers)
