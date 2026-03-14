@@ -20,13 +20,18 @@ func SetupRouter() http.Handler {
 	r.Handle("/assets/*", http.StripPrefix("/assets/", fs))
 
 	// ----- ROUTES PUBLIQUES -----
+	// Identification et Authorization
 	r.Post("/register", controllers.Register)       // Inscription
 	r.Post("/login", controllers.Login)             // Connexion
 	r.Post("/refresh-token", controllers.RefreshToken) // Rafraîchissement du token
 	r.Get("/verify-email", controllers.VerifyEmail)    // Vérification email
-	r.Get("/spaces/{id}/full", controllers.GetFullSpace)  // Les espaces mis en publique
-	r.Post("/reservations", controllers.CreateReservation)
 
+	// Les espaces
+	r.Get("/spaces/{id}/full", controllers.GetFullSpace)  // Les espaces mis en publique
+
+	// Réservations
+	r.Post("/reservations", controllers.CreateReservation)
+	r.Get("/reservations", controllers.GetUserReservations)
 
 	// ----- ROUTES POUR TOUS LES UTILISATEURS CONNECTÉS -----
 	r.Group(func(r chi.Router) {
