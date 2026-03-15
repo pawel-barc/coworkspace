@@ -85,7 +85,7 @@ CREATE TABLE reservation (
     desk_id INT,                               -- Poste réservé (open space)
     start_at TIMESTAMP NOT NULL,               -- Début de la réservation
     end_at TIMESTAMP NOT NULL,                 -- Fin de la réservation
-    status VARCHAR(50) DEFAULT 'pending',     -- Statut: 'pending', 'confirmed', 'cancelled'
+    status VARCHAR(50) DEFAULT 'confirmed',    -- Statut: 'pending', 'confirmed', 'cancelled'
     visibility VARCHAR(50) DEFAULT 'private', -- Visibilité: 'private' ou 'public'
     title VARCHAR(255),                        -- Titre de la réservation
     notes TEXT,                                -- Notes supplémentaires

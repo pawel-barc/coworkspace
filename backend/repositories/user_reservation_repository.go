@@ -135,3 +135,49 @@ func (r *UserReservationRepository) Delete(resID int, userID int) error {
 
 	return nil
 }
+
+// Récupère toutes les réservations pour un espace
+func (r *UserReservationRepository) GetBySpaceID(spaceID int) ([]models.Reservation, error) {
+
+	rows, err := r.DB.Query(`
+		SELECT id, user_id, space_id, desk_id, start_at, end_at, status, visibility, title, COALESCE(notes, '') as notes, created_at, updated_at
+			FROM reservation
+			WHERE space_id = $1
+			AND status != 'cancelled'
+			ORDER BY start_at ASC
+	`, spaceID)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	reservations := []models.Reservation{}  
+
+	for rows.Next() {
+		var res models.Reservation
+
+		err := rows.Scan(
+			&res.ID,
+			&res.UserID,
+			&res.SpaceID,
+			&res.DeskID,
+			&res.StartAt,
+			&res.EndAt,
+			&res.Status,
+			&res.Visibility,
+			&res.Title,
+			&res.Notes,
+			&res.CreatedAt,
+			&res.UpdatedAt,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		reservations = append(reservations, res)
+	}
+
+	return reservations, nil
+}

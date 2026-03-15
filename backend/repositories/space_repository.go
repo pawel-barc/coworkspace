@@ -183,3 +183,4 @@ func (r *SpaceRepository) GetFullSpace(id int) (*dto.SpaceFullResponse, error) {
 
     return result, nil
 }
+

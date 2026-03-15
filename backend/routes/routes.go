@@ -43,6 +43,7 @@ func SetupRouter() http.Handler {
 			r.Use(middleware.UserMiddleware)
 
 				r.Get("/spaces/{id}", controllers.GetSpaceByID)
+				r.Get("/spaces/{id}/reservations", controllers.GetSpaceReservations)
 
 			// Réservations user
 

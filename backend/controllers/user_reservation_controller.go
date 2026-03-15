@@ -8,6 +8,7 @@ import (
 	"coworkspace/services"
 	"coworkspace/utils"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -18,21 +19,25 @@ var ReservationService *services.ReservationService
 
 // POST /reservations
 func CreateReservation(w http.ResponseWriter, r *http.Request) {
-	var input dto.CreateReservationDTO
+    userID, ok := r.Context().Value(middleware.UserIDKey).(int)
+    if !ok {
+        utils.SendError(w, http.StatusUnauthorized, "Utilisateur non identifié")
+        return
+    }
 
-	err := json.NewDecoder(r.Body).Decode(&input)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+    var input dto.CreateReservationDTO
+    if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+        utils.SendError(w, http.StatusBadRequest, "Invalid request body")
+        return
+    }
 
-	err = ReservationService.CreateReservation(input)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusConflict)
-		return
-	}
+    err := ReservationService.CreateReservation(input, userID)
+    if err != nil {
+        utils.SendError(w, http.StatusInternalServerError, "Impossible de créer la réservation")
+        return
+    }
 
-	w.WriteHeader(http.StatusCreated)
+    utils.SendSuccess(w, http.StatusCreated, "Réservation créée")
 }
 
 // GET /reservations
@@ -109,4 +114,23 @@ func DeleteReservation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// GET /spaces/{id}/reservations
+func GetSpaceReservations(w http.ResponseWriter, r *http.Request) {
+	spaceIDStr := chi.URLParam(r, "id")
+	spaceID, err := strconv.Atoi(spaceIDStr)
+	if err != nil {
+		utils.SendError(w, http.StatusBadRequest, "ID espace invalide")
+		return
+	}
+
+	reservations, err := repositories.UserReservationRepo.GetBySpaceID(spaceID)
+	if err != nil {
+    log.Println("ERROR GET RESERVATIONS:", err)
+    utils.SendError(w, http.StatusInternalServerError, "Impossible de récupérer les réservations")
+    return
+	}
+
+	utils.SendSuccessWithData(w, http.StatusOK, "Reservations fetched", reservations)
 }

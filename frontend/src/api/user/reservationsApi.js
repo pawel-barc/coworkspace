@@ -1,6 +1,6 @@
 import fetchWithRefresh from "../shared/fetchWithRefresh";
 
-const createReservation = async (reservationData) => {
+const createReservation = async (data) => {
   const response = await fetchWithRefresh(
     "http://localhost:8080/reservations",
     {
@@ -8,7 +8,7 @@ const createReservation = async (reservationData) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(reservationData),
+      body: JSON.stringify(data),
     },
   );
 
@@ -52,9 +52,22 @@ const deleteReservation = async (id) => {
   return response;
 };
 
+const getSpaceReservations = async (spaceId) => {
+  const response = await fetchWithRefresh(
+    `http://localhost:8080/spaces/${spaceId}/reservations`,
+    { method: "GET" },
+  );
+
+  const data = await response.json();
+
+  console.log("Reservations data:", data);
+
+  return data;
+};
 export {
   createReservation,
   getMyReservations,
   updateReservation,
   deleteReservation,
+  getSpaceReservations,
 };

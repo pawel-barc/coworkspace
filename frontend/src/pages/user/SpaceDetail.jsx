@@ -1,73 +1,152 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { getSpaceDetails } from "../../api/user/spacesApi";
+import { getSpaceReservations } from "../../api/user/reservationsApi";
+import ReservationForm from "../../components/user/ReservationForm";
+import ReservationCalendar from "../../components/shared/ReservationCalendar";
 
 const SpaceDetail = () => {
   const { id } = useParams();
-
   const [space, setSpace] = useState(null);
   const [desks, setDesks] = useState([]);
   const [equipments, setEquipments] = useState([]);
+  const [startAt, setStartAt] = useState("");
+  const [endAt, setEndAt] = useState("");
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [events, setEvents] = useState([]);
+
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    const fetchSpace = async () => {
+    const fetchData = async () => {
       try {
         const response = await getSpaceDetails(id);
-
         setSpace(response.space);
         setDesks(response.desks || []);
         setEquipments(response.equipments || []);
-      } catch (error) {
-        console.error("Failed to fetch space details:", error);
+      } catch (err) {
+        console.error("Failed to fetch space:", err);
       }
     };
-
-    fetchSpace();
+    fetchData();
   }, [id]);
 
+  const fetchReservations = async () => {
+    try {
+      const res = await getSpaceReservations(space.id);
+      const formatted = res.data.map((r) => ({
+        title: r.title || "Reserved",
+        start: new Date(r.start_at),
+        end: new Date(r.end_at),
+      }));
+      setEvents(formatted);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    if (space) fetchReservations();
+  }, [space]);
+
   if (!space) return <p>Loading...</p>;
-
+  const formatLocalDatetime = (date) => {
+    const pad = (n) => (n < 10 ? "0" + n : n);
+    return (
+      date.getFullYear() +
+      "-" +
+      pad(date.getMonth() + 1) +
+      "-" +
+      pad(date.getDate()) +
+      "T" +
+      pad(date.getHours()) +
+      ":" +
+      pad(date.getMinutes())
+    );
+  };
   return (
-    <div>
-      <h1>{space.name}</h1>
+    <div className="space-detail">
+      <h2>{space.name}</h2>
 
-      <img
-        src={`http://localhost:8080${space.plan_image}`}
-        alt={space.name}
-        width="400"
-      />
-
-      <p>Type: {space.type}</p>
-      <p>Capacity: {space.capacity}</p>
-      <p>Location: {space.location_label}</p>
-
-      <h2>Equipments</h2>
-
-      {equipments.length === 0 && <p>No equipment available</p>}
-
-      <ul>
-        {equipments.map((eq) => (
-          <li key={eq.id}>
-            {eq.name} (x{eq.quantity})
-          </li>
+      <div
+        ref={containerRef}
+        style={{
+          position: "relative",
+          width: "800px",
+          height: "500px",
+          border: "1px solid #ccc",
+          backgroundImage: `url(http://localhost:8080${space.plan_image})`,
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {desks.map((desk) => (
+          <div
+            key={desk.id}
+            style={{
+              position: "absolute",
+              left: desk.position_x,
+              top: desk.position_y,
+              padding: "5px 10px",
+              backgroundColor: "rgba(40,167,69,0.85)",
+              color: "#fff",
+              borderRadius: "4px",
+            }}
+          >
+            {desk.name}
+          </div>
         ))}
-      </ul>
+      </div>
 
-      {space.type === "open_space" && (
-        <>
-          <h2>Desks</h2>
+      <div style={{ marginTop: "20px" }}>
+        <p>
+          <b>Type:</b> {space.type}
+        </p>
+        <p>
+          <b>Capacity:</b> {space.capacity}
+        </p>
+        <p>
+          <b>Location:</b> {space.location_label}
+        </p>
+      </div>
 
-          {desks.length === 0 && <p>No desks</p>}
+      <div style={{ marginTop: "20px" }}>
+        <h3>Equipment</h3>
+        {equipments.length === 0 && <p>No equipment</p>}
+        <ul>
+          {equipments.map((eq) => (
+            <li key={eq.id}>
+              {eq.name} (x{eq.quantity})
+            </li>
+          ))}
+        </ul>
+      </div>
 
-          <ul>
-            {desks.map((desk) => (
-              <li key={desk.id}>{desk.name}</li>
-            ))}
-          </ul>
-        </>
-      )}
+      <div style={{ marginTop: "20px" }}>
+        <button onClick={() => setShowCalendar((prev) => !prev)}>
+          Reserve this space
+        </button>
 
-      <button>Reserve this space</button>
+        {showCalendar && (
+          <>
+            <ReservationCalendar
+              spaceId={space.id}
+              events={events}
+              onSelectSlot={(slot) => {
+                setStartAt(formatLocalDatetime(slot.start));
+                setEndAt(formatLocalDatetime(slot.end));
+              }}
+            />
+
+            <ReservationForm
+              spaceId={space.id}
+              startAt={startAt}
+              endAt={endAt}
+              onReservationCreated={fetchReservations}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 };
