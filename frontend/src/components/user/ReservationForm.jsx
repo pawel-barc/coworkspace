@@ -1,21 +1,29 @@
 import { useState } from "react";
 import { createReservation } from "../../api/user/reservationsApi";
 import { toast } from "react-toastify";
-const ReservationForm = ({ spaceId, startAt, endAt, onReservationCreated }) => {
+const ReservationForm = ({
+  spaceId,
+  startAt,
+  endAt,
+  deskId,
+  onReservationCreated,
+}) => {
   const [title, setTitle] = useState("");
   const [visibility, setVisibility] = useState("private");
   const [notes, setNotes] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const startAtRFC = new Date(startAt).toISOString();
-    const endAtRFC = new Date(endAt).toISOString();
+    if (!deskId) {
+      alert("Please select a desk first!");
+      return;
+    }
 
     const reservationData = {
       space_id: parseInt(spaceId),
-      start_at: startAtRFC,
-      end_at: endAtRFC,
+      desk_id: deskId,
+      start_at: new Date(startAt).toISOString(),
+      end_at: new Date(endAt).toISOString(),
       title,
       visibility,
       notes,
@@ -23,18 +31,17 @@ const ReservationForm = ({ spaceId, startAt, endAt, onReservationCreated }) => {
 
     try {
       await createReservation(reservationData);
-      toast.success("La réservation a réussie");
-      if (onReservationCreated) onReservationCreated();
+      toast.success("Réservation crée avec succès");
+      onReservationCreated();
     } catch (err) {
       console.error(err);
-      toast.error("La connexion a échouée");
+      toast.error("Réservation a echoué");
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h3>Create Reservation</h3>
-
       <div>
         <label>Title</label>
         <input
@@ -44,7 +51,6 @@ const ReservationForm = ({ spaceId, startAt, endAt, onReservationCreated }) => {
           required
         />
       </div>
-
       <div>
         <label>Start</label>
         <input type="datetime-local" value={startAt} readOnly />
@@ -53,7 +59,6 @@ const ReservationForm = ({ spaceId, startAt, endAt, onReservationCreated }) => {
         <label>End</label>
         <input type="datetime-local" value={endAt} readOnly />
       </div>
-
       <div>
         <label>Visibility</label>
         <select
@@ -64,12 +69,10 @@ const ReservationForm = ({ spaceId, startAt, endAt, onReservationCreated }) => {
           <option value="public">Public</option>
         </select>
       </div>
-
       <div>
         <label>Notes</label>
         <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
       </div>
-
       <button type="submit">Reserve</button>
     </form>
   );

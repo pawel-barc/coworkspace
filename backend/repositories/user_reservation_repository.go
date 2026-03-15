@@ -5,6 +5,7 @@ import (
 	"coworkspace/models"
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -24,25 +25,42 @@ func (r *UserReservationRepository) HasConflict(
 	end time.Time,
 ) (bool, error) {
 
-	query := `
-	SELECT COUNT(*)
-	FROM reservation
-	WHERE status != 'cancelled'
-	AND (
-		(desk_id = $1 AND $1 IS NOT NULL)
-		OR
-		(space_id = $2 AND $2 IS NOT NULL)
-	)
-	AND start_at < $3
-	AND end_at > $4
-	`
+	fmt.Printf("HasConflict called with DeskID=%v, SpaceID=%v, Start=%v, End=%v\n", deskID, spaceID, start, end)
+
+	var query string
+	var param interface{}
+
+	if deskID != nil {
+		query = `
+		SELECT COUNT(*)
+		FROM reservation
+		WHERE status != 'cancelled'
+		AND desk_id = $1
+		AND start_at < $2
+		AND end_at > $3
+		`
+		param = deskID
+	} else {
+
+		query = `
+		SELECT COUNT(*)
+		FROM reservation
+		WHERE status != 'cancelled'
+		AND space_id = $1
+		AND start_at < $2
+		AND end_at > $3
+		`
+		param = spaceID
+	}
 
 	var count int
-	err := r.DB.QueryRow(query, deskID, spaceID, end, start).Scan(&count)
+	err := r.DB.QueryRow(query, param, end, start).Scan(&count)
 	if err != nil {
+		fmt.Printf("Error checking conflict: %v\n", err)
 		return false, err
 	}
 
+	fmt.Printf("Conflicting reservations count: %d\n", count)
 	return count > 0, nil
 }
 
