@@ -7,7 +7,7 @@ import (
 )
 
 type ReservationService struct {
-	Repo *repositories.ReservationRepository
+	Repo *repositories.UserReservationRepository
 }
 
 func (s *ReservationService) CreateReservation(dto dto.CreateReservationDTO) error {

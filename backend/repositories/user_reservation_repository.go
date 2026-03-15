@@ -8,13 +8,16 @@ import (
 	"time"
 )
 
-type ReservationRepository struct {
+// Repo pour les réservations des utilisateurs standards
+type UserReservationRepository struct {
 	DB *sql.DB
 }
 
-var ReservationRepo *ReservationRepository
+// Instance globale
+var UserReservationRepo *UserReservationRepository
 
-func (r *ReservationRepository) HasConflict(
+// Vérifie s'il y a un conflit de réservation pour le desk ou l'espace
+func (r *UserReservationRepository) HasConflict(
 	deskID *int,
 	spaceID *int,
 	start time.Time,
@@ -43,7 +46,8 @@ func (r *ReservationRepository) HasConflict(
 	return count > 0, nil
 }
 
-func (r *ReservationRepository) Create(dto dto.CreateReservationDTO) error {
+// Crée une nouvelle réservation
+func (r *UserReservationRepository) Create(dto dto.CreateReservationDTO) error {
 	query := `
 	INSERT INTO reservation
 	(user_id, space_id, desk_id, start_at, end_at, title, notes, visibility)
@@ -65,7 +69,8 @@ func (r *ReservationRepository) Create(dto dto.CreateReservationDTO) error {
 	return err
 }
 
-func (r *ReservationRepository) GetByUserID(userID int) ([]models.Reservation, error) {
+// Récupère toutes les réservations d'un utilisateur
+func (r *UserReservationRepository) GetByUserID(userID int) ([]models.Reservation, error) {
 	rows, err := r.DB.Query(`
 		SELECT id, user_id, space_id, desk_id, start_at, end_at, status, visibility, title, notes, created_at, updated_at
 		FROM reservation
@@ -94,8 +99,9 @@ func (r *ReservationRepository) GetByUserID(userID int) ([]models.Reservation, e
 	return reservations, nil
 }
 
-func (repo *ReservationRepository) Update(res models.Reservation) error {
-	result, err := repo.DB.Exec(`
+// Met à jour une réservation pour l'utilisateur
+func (r *UserReservationRepository) Update(res models.Reservation) error {
+	result, err := r.DB.Exec(`
 		UPDATE reservation
 		SET start_at=$1, end_at=$2, title=$3, notes=$4, visibility=$5, updated_at=NOW()
 		WHERE id=$6 AND user_id=$7
@@ -112,8 +118,9 @@ func (repo *ReservationRepository) Update(res models.Reservation) error {
 	return nil
 }
 
-func (repo *ReservationRepository) Delete(resID int, userID int) error {
-	result, err := repo.DB.Exec(`
+// Supprime une réservation pour l'utilisateur
+func (r *UserReservationRepository) Delete(resID int, userID int) error {
+	result, err := r.DB.Exec(`
 		DELETE FROM reservation
 		WHERE id=$1 AND user_id=$2
 	`, resID, userID)

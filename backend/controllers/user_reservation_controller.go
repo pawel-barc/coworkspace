@@ -16,8 +16,8 @@ import (
 
 var ReservationService *services.ReservationService
 
+// POST /reservations
 func CreateReservation(w http.ResponseWriter, r *http.Request) {
-
 	var input dto.CreateReservationDTO
 
 	err := json.NewDecoder(r.Body).Decode(&input)
@@ -35,16 +35,17 @@ func CreateReservation(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// GET /reservations
 func GetUserReservations(w http.ResponseWriter, r *http.Request) {
 	userID, ok := r.Context().Value(middleware.UserIDKey).(int)
 	if !ok {
-		utils.SendError(w, http.StatusUnauthorized, "User ID not found")
+		utils.SendError(w, http.StatusUnauthorized, "ID utilisateur introuvable")
 		return
 	}
 
-	reservations, err := repositories.ReservationRepo.GetByUserID(userID)
+	reservations, err := repositories.UserReservationRepo.GetByUserID(userID)
 	if err != nil {
-		utils.SendError(w, http.StatusInternalServerError, "Failed to fetch reservations")
+		utils.SendError(w, http.StatusInternalServerError, "Impossible de récupérer les réservations")
 		return
 	}
 
@@ -76,7 +77,7 @@ func UpdateReservation(w http.ResponseWriter, r *http.Request) {
 	input.ID = resID
 	input.UserID = userID
 
-	err = repositories.ReservationRepo.Update(input)
+	err = repositories.UserReservationRepo.Update(input)
 	if err != nil {
 		utils.SendError(w, http.StatusInternalServerError, "Impossible de mettre à jour la réservation")
 		return
@@ -101,7 +102,7 @@ func DeleteReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = repositories.ReservationRepo.Delete(resID, userID)
+	err = repositories.UserReservationRepo.Delete(resID, userID)
 	if err != nil {
 		utils.SendError(w, http.StatusInternalServerError, "Impossible de supprimer la réservation")
 		return

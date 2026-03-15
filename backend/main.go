@@ -20,9 +20,14 @@ func main() {
 	repositories.SpaceRepo = &repositories.SpaceRepository{DB: db.DB}
 	repositories.EquipmentRepo = &repositories.EquipmentRepository{DB: db.DB,}
 	repositories.DeskRepo = &repositories.DeskRepository{DB: db.DB,}
-	reservationRepo := &repositories.ReservationRepository{DB: db.DB}
-	reservationService := &services.ReservationService{Repo: reservationRepo}
+
+	userReservationRepo := &repositories.UserReservationRepository{DB: db.DB}
+	repositories.UserReservationRepo = userReservationRepo
+	reservationService := &services.ReservationService{Repo: userReservationRepo}
 	controllers.ReservationService = reservationService
+
+	adminReservationRepo := &repositories.AdminReservationRepository{DB: db.DB}
+	repositories.AdminReservationRepo = adminReservationRepo
 	// ----------------------------
 	// MIGRATION: création de la base des données
 	// ----------------------------

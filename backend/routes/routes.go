@@ -82,6 +82,12 @@ func SetupRouter() http.Handler {
 		r.Patch("/admin/desks/{id}", controllers.UpdateDesk)
 		r.Delete("/admin/desks/{id}", controllers.DeleteDesk)
 
+		// Réservations Admin
+			// Reservations
+		r.Get("/admin/reservations", controllers.GetAllReservations)
+		r.Patch("/admin/reservations/{id}/status", controllers.UpdateReservationStatus)
+		r.Patch("/admin/reservations/{id}", controllers.UpdateAdminReservation)
+		r.Delete("/admin/reservations/{id}", controllers.DeleteAdminReservation)
 
 		// Exemple: gestion des utilisateurs et espaces par l'admin
 		// r.Get("/admin/users", controllers.AdminListUsers)
