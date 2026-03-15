@@ -56,13 +56,25 @@ func CreateSpace(w http.ResponseWriter, r *http.Request) {
 
 
 func GetSpaces(w http.ResponseWriter, r *http.Request) {
-    spaces, err := repositories.SpaceRepo.GetAll()
-    if err != nil {
-        utils.SendError(w, http.StatusInternalServerError, "Failed to fetch spaces")
-        return
-    }
 
-    utils.SendSuccessWithData(w, http.StatusOK, "Récuperation ok", spaces)
+	spaces, err := repositories.SpaceRepo.GetActive()
+	if err != nil {
+		utils.SendError(w, http.StatusInternalServerError, "Failed to fetch spaces")
+		return
+	}
+
+	utils.SendSuccessWithData(w, http.StatusOK, "Récuperation ok", spaces)
+}
+
+func GetAdminSpaces(w http.ResponseWriter, r *http.Request) {
+
+	spaces, err := repositories.SpaceRepo.GetAll()
+	if err != nil {
+		utils.SendError(w, http.StatusInternalServerError, "Failed to fetch spaces")
+		return
+	}
+
+	utils.SendSuccessWithData(w, http.StatusOK, "Récuperation ok", spaces)
 }
 
 

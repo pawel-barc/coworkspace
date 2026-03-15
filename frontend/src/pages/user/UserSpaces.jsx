@@ -1,18 +1,33 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getSpaces } from "../../api/user/spacesApi";
+import SpaceCard from "../../components/user/SpaceCard";
 
 const UserSpaces = () => {
+  const [spaces, setSpaces] = useState([]);
+
+  useEffect(() => {
+    const fetchSpaces = async () => {
+      try {
+        const response = await getSpaces();
+        setSpaces(response.data);
+      } catch (error) {
+        console.error("Failed to fetch spaces:", error);
+      }
+    };
+
+    fetchSpaces();
+  }, []);
+
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Espaces disponibles</h1>
-      <ul>
-        <li>
-          <Link to="/spaces/1">Espace 1</Link>
-        </li>
-        <li>
-          <Link to="/spaces/2">Espace 2</Link>
-        </li>
-      </ul>
+    <div>
+      <h1>Available Spaces</h1>
+
+      <div className="spaces-grid">
+        {Array.isArray(spaces) &&
+        spaces.map((space) => (
+          <SpaceCard key={space.id} space={space} />
+        ))}
+      </div>
     </div>
   );
 };

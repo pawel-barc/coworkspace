@@ -68,6 +68,49 @@ func (r *SpaceRepository) GetAll() ([]models.Space, error) {
     return spaces, nil
 }
 
+func (r *SpaceRepository) GetActive() ([]models.Space, error) {
+
+	rows, err := r.DB.Query(`
+	SELECT id, name, type, capacity, location_label, plan_image, is_active, created_at, updated_at
+	FROM space
+	WHERE is_active = true
+	ORDER BY id ASC
+	`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	spaces := []models.Space{}
+
+	for rows.Next() {
+		var s models.Space
+
+		err := rows.Scan(
+			&s.ID,
+			&s.Name,
+			&s.Type,
+			&s.Capacity,
+			&s.LocationLabel,
+			&s.PlanImage,
+			&s.IsActive,
+			&s.CreatedAt,
+			&s.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		spaces = append(spaces, s)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return spaces, nil
+}
+
 
 func (repo *SpaceRepository) GetByID(id int) (*models.Space, error) {
     space := &models.Space{}

@@ -7,7 +7,7 @@ import UserDashboard from "../pages/user/UserDashboard";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import Profile from "../pages/shared/Profile";
 import UserSpaces from "../pages/user/UserSpaces";
-import SpaceDetails from "../pages/user/SpaceDetails";
+import SpaceDetail from "../pages/user/SpaceDetail";
 import MyReservations from "../pages/user/MyReservations";
 import Logout from "../components/shared/Logout";
 import AdminSpaces from "../pages/admin/AdminSpaces";
@@ -67,7 +67,7 @@ const Router = () => {
           <Route path="/profile" element={<Profile />} />
 
           <Route path="/spaces" element={<UserSpaces />} />
-          <Route path="/spaces/:id" element={<SpaceDetails />} />
+          <Route path="/spaces/:id" element={<SpaceDetail />} />
 
           <Route path="/my-reservations" element={<MyReservations />} />
 
