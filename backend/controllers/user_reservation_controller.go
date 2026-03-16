@@ -49,11 +49,12 @@ func GetUserReservations(w http.ResponseWriter, r *http.Request) {
 	}
 
 	reservations, err := repositories.UserReservationRepo.GetByUserID(userID)
-	if err != nil {
-		utils.SendError(w, http.StatusInternalServerError, "Impossible de récupérer les réservations")
-		return
-	}
+if err != nil {
+	log.Println("Erreur récupération réservations:", err)
 
+	utils.SendError(w, http.StatusInternalServerError, "Impossible de récupérer les réservations")
+	return
+}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(reservations)
 }

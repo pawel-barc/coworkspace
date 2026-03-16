@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import HeaderLogged from "../components/shared/HeaderLogged";
+import "../styles/layout/Layout.css";
 
 const PrivateLayout = () => {
   return (

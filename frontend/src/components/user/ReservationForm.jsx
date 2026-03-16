@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { createReservation } from "../../api/user/reservationsApi";
 import { toast } from "react-toastify";
+
 const ReservationForm = ({
   spaceId,
   startAt,
   endAt,
   deskId,
+  requiresDesk,
   onReservationCreated,
 }) => {
   const [title, setTitle] = useState("");
@@ -14,14 +16,15 @@ const ReservationForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!deskId) {
+
+    if (requiresDesk && !deskId) {
       alert("Please select a desk first!");
       return;
     }
 
     const reservationData = {
       space_id: parseInt(spaceId),
-      desk_id: deskId,
+      desk_id: deskId || null,
       start_at: new Date(startAt).toISOString(),
       end_at: new Date(endAt).toISOString(),
       title,

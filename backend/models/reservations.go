@@ -12,7 +12,7 @@ type Reservation struct {
 	Status     string     `json:"status"`
 	Visibility string     `json:"visibility"`
 	Title      string     `json:"title"`
-	Notes      string     `json:"notes"`
+	Notes      *string     `json:"notes"`
 	CreatedAt  time.Time  `json:"created_at"`
 	UpdatedAt  time.Time  `json:"updated_at"`
 }

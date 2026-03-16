@@ -1,0 +1,52 @@
+.space-card-link {
+  text-decoration: none;
+}
+
+.space-card {
+  width: 100%;
+  max-width: 280px;
+  min-width: 280px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  cursor: pointer;
+  border: 1px solid #eaeaea;
+}
+.space-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.space-card-header {
+  background: #7bb493;
+  color: white;
+  padding: 16px;
+}
+
+.space-card-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+/* body */
+
+.space-card-body {
+  padding: 16px;
+  color: #444;
+  font-size: 14px;
+}
+
+.space-card-body p {
+  margin: 6px 0;
+}
+
+.spaces-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-items: center;
+}

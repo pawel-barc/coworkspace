@@ -18,7 +18,7 @@ const SpaceDetail = () => {
   const [endAt, setEndAt] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDeskId, setSelectedDeskId] = useState(null);
-  const [deskAvailability, setDeskAvailability] = useState({}); // {deskId: true/false}
+  const [deskAvailability, setDeskAvailability] = useState({});
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -57,8 +57,8 @@ const SpaceDetail = () => {
     const start = slot.start;
     const end = slot.end;
 
-    setStartAt(start.toISOString().slice(0, 16));
-    setEndAt(end.toISOString().slice(0, 16));
+    setStartAt(formatLocalDatetime(start));
+    setEndAt(formatLocalDatetime(end));
     setSelectedDeskId(null);
 
     const reservations = await fetchReservations();
@@ -97,97 +97,138 @@ const SpaceDetail = () => {
   };
 
   return (
-    <div className="space-detail">
-      <h2>{space.name}</h2>
+    <div
+      className="space-detail"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "2rem",
+        gap: "1.5rem",
+      }}
+    >
+      <h2 style={{ color: "#fff", textShadow: "1px 1px 3px rgba(0,0,0,0.5)" }}>
+        {space.name}
+      </h2>
 
-      <div style={{ marginTop: "20px" }}>
-        <p>
-          <b>Type:</b> {space.type}
-        </p>
-        <p>
-          <b>Capacity:</b> {space.capacity}
-        </p>
-        <p>
-          <b>Location:</b> {space.location_label}
-        </p>
-      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "2rem",
+          flexWrap: "wrap",
+          width: "100%",
+        }}
+      >
+        <div
+          style={{
+            flex: "1 1 250px",
+            backgroundColor: "#1e1e1e",
+            color: "white",
+            padding: "1.5rem",
+            borderRadius: "10px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+            minWidth: "250px",
+          }}
+        >
+          <p>
+            <b>Type:</b> {space.type}
+          </p>
+          <p>
+            <b>Capacity:</b> {space.capacity}
+          </p>
+          <p>
+            <b>Location:</b> {space.location_label}
+          </p>
 
-      <div style={{ marginTop: "20px" }}>
-        <h3>Equipment</h3>
-        {equipments.length === 0 && <p>No equipment</p>}
-        <ul>
-          {equipments.map((eq) => (
-            <li key={eq.id}>
-              {eq.name} (x{eq.quantity})
-            </li>
-          ))}
-        </ul>
-      </div>
+          <h4 style={{ marginTop: "1rem" }}>Equipment:</h4>
+          <ul style={{ paddingLeft: "1.2rem" }}>
+            {equipments.length === 0 && <li>No equipment</li>}
+            {equipments.map((eq) => (
+              <li key={eq.id}>
+                {eq.name} (x{eq.quantity})
+              </li>
+            ))}
+          </ul>
 
-      <div style={{ marginTop: "20px" }}>
-        <ReservationCalendar
-          spaceId={space.id}
-          events={events}
-          onSelectSlot={handleSlotSelect}
-        />
+          <button
+            onClick={() => setShowCalendar(true)}
+            style={{
+              marginTop: "1.5rem",
+              width: "100%",
+              padding: "10px 0",
+              backgroundColor: "#7BB493",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              fontSize: "1rem",
+            }}
+          >
+            Réserver
+          </button>
+        </div>
+
+        <div
+          ref={containerRef}
+          style={{
+            position: "relative",
+            width: "800px",
+            height: "500px",
+            backgroundColor: "#000",
+            backgroundImage: `url(http://localhost:8080${space.plan_image})`,
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            borderRadius: "10px",
+            border: "2px solid #7BB493",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+          }}
+        >
+          {desks.map((desk) => {
+            const isAvailable = deskAvailability[desk.id];
+            const offset = 89;
+            return (
+              <div
+                key={desk.id}
+                onClick={() => isAvailable && setSelectedDeskId(desk.id)}
+                style={{
+                  position: "absolute",
+                  left: desk.position_x + offset,
+                  top: desk.position_y + offset,
+                  width: "40px",
+                  height: "40px",
+                  backgroundColor: isAvailable
+                    ? desk.id === selectedDeskId
+                      ? "#ffc107"
+                      : "rgba(40,167,69,0.85)"
+                    : "rgba(220,53,69,0.85)",
+                  borderRadius: "6px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                  color: "white",
+                  cursor: isAvailable ? "pointer" : "not-allowed",
+                  border: "1px solid rgba(0,0,0,0.3)",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
+                }}
+              >
+                {desk.name}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {showCalendar && (
-        <>
-          <h3>Pick a Desk</h3>
-          <div
-            ref={containerRef}
-            style={{
-              position: "relative",
-              width: "800px",
-              height: "500px",
-              border: "1px solid #ccc",
-              backgroundImage: `url(http://localhost:8080${space.plan_image})`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            {desks.map((desk) => {
-              const isAvailable = deskAvailability[desk.id];
-              return (
-                <div
-                  key={desk.id}
-                  onClick={() => isAvailable && setSelectedDeskId(desk.id)}
-                  style={{
-                    position: "absolute",
-                    left: desk.position_x,
-                    top: desk.position_y,
-
-                    width: "32px",
-                    height: "32px",
-
-                    backgroundColor: isAvailable
-                      ? desk.id === selectedDeskId
-                        ? "#ffc107"
-                        : "rgba(40,167,69,0.85)"
-                      : "rgba(220,53,69,0.85)",
-
-                    borderRadius: "6px",
-
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-
-                    fontSize: "10px",
-                    fontWeight: "bold",
-                    color: "white",
-
-                    transform: "translate(300%, 200%)",
-
-                    cursor: isAvailable ? "pointer" : "not-allowed",
-                    border: "1px solid rgba(0,0,0,0.2)",
-                  }}
-                >
-                  {desk.name}
-                </div>
-              );
-            })}
-          </div>
+        <div style={{ width: "100%", marginTop: "2rem" }}>
+          <ReservationCalendar
+            spaceId={space.id}
+            events={events}
+            onSelectSlot={handleSlotSelect}
+          />
 
           <ReservationForm
             spaceId={space.id}
@@ -195,8 +236,9 @@ const SpaceDetail = () => {
             endAt={endAt}
             deskId={selectedDeskId}
             onReservationCreated={fetchReservations}
+            requiresDesk={space.type === "open_space"}
           />
-        </>
+        </div>
       )}
     </div>
   );

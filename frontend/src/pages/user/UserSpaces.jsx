@@ -20,13 +20,11 @@ const UserSpaces = () => {
 
   return (
     <div>
-      <h1>Available Spaces</h1>
+      <h1 style={{ color: "white", textAlign: "center" }}>Available Spaces</h1>
 
       <div className="spaces-grid">
         {Array.isArray(spaces) &&
-        spaces.map((space) => (
-          <SpaceCard key={space.id} space={space} />
-        ))}
+          spaces.map((space) => <SpaceCard key={space.id} space={space} />)}
       </div>
     </div>
   );

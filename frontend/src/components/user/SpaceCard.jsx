@@ -1,24 +1,27 @@
 import { Link } from "react-router-dom";
+import "../../styles/components/user/SpaceCard.css";
 
 const SpaceCard = ({ space }) => {
   return (
-    <div className="space-card">
-      <img
-        src={`http://localhost:8080${space.plan_image}`}
-        alt={space.name}
-        width="200"
-      />
+    <Link to={`/spaces/${space.id}`} className="space-card-link">
+      <div className="space-card">
+        <div className="space-card-header">
+          <h3>{space.name}</h3>
+        </div>
 
-      <h3>{space.name}</h3>
-
-      <p>Type: {space.type}</p>
-      <p>Capacity: {space.capacity}</p>
-      <p>Location: {space.location_label}</p>
-
-      <Link to={`/spaces/${space.id}`}>
-        <button>View details</button>
-      </Link>
-    </div>
+        <div className="space-card-body">
+          <p>
+            <strong>Type:</strong> {space.type}
+          </p>
+          <p>
+            <strong>Capacity:</strong> {space.capacity}
+          </p>
+          <p>
+            <strong>Location:</strong> {space.location_label}
+          </p>
+        </div>
+      </div>
+    </Link>
   );
 };
 

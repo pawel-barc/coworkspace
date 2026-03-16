@@ -6,9 +6,9 @@ const Profile = () => {
 
   return (
     <div style={{ padding: "2rem" }}>
-      <h1>Profil</h1>
+      <h1 style={{ color: "white", textAlign: "center" }}>Profil</h1>
       {currentUser ? (
-        <div>
+        <div style={{ color: "white" }}>
           <p>
             <strong>Nom d'utilisateur:</strong>{" "}
             {currentUser.username || currentUser.email}

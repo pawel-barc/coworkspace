@@ -1,0 +1,12 @@
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: black;
+}
+
+.main-content {
+  margin-left: 260px;
+  padding: 0;
+  width: calc(100% - 260px);
+  min-height: 100vh;
+}
