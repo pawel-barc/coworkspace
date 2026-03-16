@@ -10,12 +10,12 @@ const HeaderLogged = () => {
   return (
     <aside className="sidebar">
       <nav className="sidebar-nav">
-        <NavLink to="/" end>
-          Accueil
-        </NavLink>
         {/* Liens visible uniquement pour admin */}
         {role === "user" && (
           <>
+            <NavLink to="/" end>
+              Accueil
+            </NavLink>
             <NavLink to="/spaces">Espaces</NavLink>
 
             <NavLink to="/my-reservations">Mes réservations</NavLink>
@@ -32,6 +32,7 @@ const HeaderLogged = () => {
             <NavLink to="/admin/spaces">Gestion Spaces</NavLink>
 
             <NavLink to="/admin/users">Gestion Membres</NavLink>
+            <NavLink to="/admin/reservations">Gestion Réservations</NavLink>
           </>
         )}
 

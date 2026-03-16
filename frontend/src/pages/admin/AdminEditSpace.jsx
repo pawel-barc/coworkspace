@@ -4,6 +4,7 @@ import {
   getAdminSpaceFull,
   updateAdminSpace,
 } from "../../api/admin/adminSpacesApi";
+import "../../styles/components/admin/FormStyles.css";
 
 const AdminEditSpace = () => {
   const { id } = useParams();
@@ -131,7 +132,9 @@ const AdminEditSpace = () => {
             <option value="/assets/plans/open_space.png">Open Space</option>
           </select>
         </div>
-        <button type="submit">Update</button>
+        <button type="submit" style={{ padding: "10px" }}>
+          Update
+        </button>
       </form>
     </div>
   );

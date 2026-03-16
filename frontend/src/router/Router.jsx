@@ -18,6 +18,7 @@ import AdminLayout from "../layout/AdminLayout";
 import AdminEditSpace from "../pages/admin/AdminEditSpace";
 import AdminSpaceFull from "../pages/admin/AdminSpaceFull";
 import AdminCreateSpace from "../pages/admin/AdminCreateSpace";
+import AdminReservations from "../pages/admin/AdminReservations";
 
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -89,6 +90,7 @@ const Router = () => {
           <Route path="/admin/spaces/create" element={<AdminCreateSpace />} />
           <Route path="/admin/spaces/:id/edit" element={<AdminEditSpace />} />
           <Route path="/admin/spaces/:id/full" element={<AdminSpaceFull />} />
+          <Route path="/admin/reservations" element={<AdminReservations />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

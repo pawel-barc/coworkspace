@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { deleteAdminSpace } from "../../api/admin/adminSpacesApi";
+
 const AdminSpaceCard = ({ space }) => {
   const handleDelete = async () => {
     if (window.confirm(`Are you sure you want to delete ${space.name}?`)) {
@@ -13,30 +14,88 @@ const AdminSpaceCard = ({ space }) => {
       }
     }
   };
+
   return (
-    <div className="admin-space-card">
-      <img
-        src={`http://localhost:8080${space.plan_image}`}
-        alt={space.name}
-        width="200"
-      />
+    <div
+      style={{
+        background: "white",
+        borderRadius: "10px",
+        overflow: "hidden",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        transition: "transform 0.2s, box-shadow 0.2s",
+      }}
+    >
+      <div
+        style={{ backgroundColor: "#7BB493", padding: "1rem", color: "white" }}
+      >
+        <h3 style={{ margin: 0 }}>{space.name}</h3>
+      </div>
 
-      <h3>{space.name}</h3>
+      <div style={{ padding: "1rem", color: "#444", fontSize: "14px" }}>
+        <p>
+          <strong>Type:</strong> {space.type}
+        </p>
+        <p>
+          <strong>Capacité:</strong> {space.capacity}
+        </p>
+        <p>
+          <strong>Location:</strong> {space.location_label}
+        </p>
+      </div>
 
-      <p>Type: {space.type}</p>
-      <p>Capacité: {space.capacity}</p>
-      <p>Location: {space.location_label}</p>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          padding: "0.5rem 0 1rem 0",
+        }}
+      >
+        <Link to={`/admin/spaces/${space.id}/edit`}>
+          <button
+            style={{
+              padding: "6px 12px",
+              borderRadius: "6px",
+              border: "none",
+              backgroundColor: "#ffc107",
+              color: "#000",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Edit
+          </button>
+        </Link>
 
-      <div className="card-actions">
-        <div className="card-actions">
-          <Link to={`/admin/spaces/${space.id}/edit`}>
-            <button>Edit</button>
-          </Link>
-          <Link to={`/admin/spaces/${space.id}/full`}>
-            <button>View Full</button>
-          </Link>
-          <button onClick={handleDelete}>Delete</button>
-        </div>
+        <Link to={`/admin/spaces/${space.id}/full`}>
+          <button
+            style={{
+              padding: "6px 12px",
+              borderRadius: "6px",
+              border: "none",
+              backgroundColor: "#17a2b8",
+              color: "white",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            View Full
+          </button>
+        </Link>
+
+        <button
+          onClick={handleDelete}
+          style={{
+            padding: "6px 12px",
+            borderRadius: "6px",
+            border: "none",
+            backgroundColor: "#dc3545",
+            color: "white",
+            cursor: "pointer",
+            fontWeight: "bold",
+          }}
+        >
+          Delete
+        </button>
       </div>
     </div>
   );

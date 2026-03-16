@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAdminSpace } from "../../api/admin/adminSpacesApi";
-
+import "../../styles/components/admin/FormStyles.css";
 const AdminCreateSpace = () => {
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ const AdminCreateSpace = () => {
   };
 
   return (
-    <div className="admin-create-space">
+    <div className="admin-edit-space admin-create-space">
       <h2>Créer un nouvel espace</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit}>
@@ -112,7 +112,9 @@ const AdminCreateSpace = () => {
           </select>
         </div>
 
-        <button type="submit">Créer</button>
+        <button type="submit" style={{ padding: "10px" }}>
+          Créer
+        </button>
       </form>
     </div>
   );

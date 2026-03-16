@@ -1,18 +1,17 @@
 import { Outlet } from "react-router-dom";
 import HeaderLogged from "../components/shared/HeaderLogged";
+import "../styles/layout/Layout.css";
+
 const AdminLayout = () => {
   return (
-    <>
-      <div className="admin-layout">
-        <HeaderLogged />
-        <header>
-          <h1>Admin Panel</h1>
-        </header>
-        <main>
-          <Outlet />
-        </main>
-      </div>
-    </>
+    <div className="layout-container">
+      <HeaderLogged />
+
+      <main className="main-content">
+        <header style={{ padding: "2rem", color: "white" }}></header>
+        <Outlet />
+      </main>
+    </div>
   );
 };
 

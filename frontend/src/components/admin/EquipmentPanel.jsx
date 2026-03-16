@@ -39,19 +39,79 @@ const EquipmentPanel = ({ equipments, spaceId, setEquipments }) => {
   };
 
   return (
-    <div className="equipment-panel">
-      <h3>Équipements</h3>
-      <ul>
+    <div
+      style={{
+        marginTop: "2rem",
+        padding: "1rem",
+        borderRadius: "10px",
+        backgroundColor: "#1e1e1e",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+        color: "white",
+      }}
+    >
+      <h3 style={{ marginBottom: "1rem" }}>Équipements</h3>
+
+      <ul style={{ listStyle: "none", padding: 0, marginBottom: "1rem" }}>
         {equipments.map((eq) => (
-          <li key={eq.id}>
-            {eq.name} (Quantité: {eq.quantity} {eq.description})
-            <button onClick={() => handleEdit(eq)}>Edit</button>
-            <button onClick={() => handleDelete(eq.id)}>Delete</button>
+          <li
+            key={eq.id}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0.5rem",
+              marginBottom: "0.5rem",
+              borderRadius: "6px",
+              backgroundColor: "rgba(0, 123, 255, 0.15)",
+            }}
+          >
+            <span>
+              {eq.name} (Quantité: {eq.quantity} {eq.description})
+            </span>
+            <div>
+              <button
+                onClick={() => handleEdit(eq)}
+                style={{
+                  marginRight: "0.5rem",
+                  backgroundColor: "#ffc107",
+                  border: "none",
+                  padding: "4px 8px",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  color: "#000",
+                }}
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(eq.id)}
+                style={{
+                  backgroundColor: "#dc3545",
+                  border: "none",
+                  padding: "4px 8px",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  color: "#fff",
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
 
-      <form onSubmit={handleAdd}>
+      <form
+        onSubmit={handleAdd}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.5rem",
+          backgroundColor: "#2a2a2a",
+          padding: "1rem",
+          borderRadius: "10px",
+        }}
+      >
         <input
           type="text"
           name="name"
@@ -59,6 +119,13 @@ const EquipmentPanel = ({ equipments, spaceId, setEquipments }) => {
           onChange={handleChange}
           placeholder="Nom"
           required
+          style={{
+            padding: "0.5rem",
+            borderRadius: "6px",
+            border: "1px solid #7BB493",
+            backgroundColor: "#1e1e1e",
+            color: "white",
+          }}
         />
         <input
           type="number"
@@ -67,6 +134,13 @@ const EquipmentPanel = ({ equipments, spaceId, setEquipments }) => {
           onChange={handleChange}
           placeholder="Quantité"
           required
+          style={{
+            padding: "0.5rem",
+            borderRadius: "6px",
+            border: "1px solid #7BB493",
+            backgroundColor: "#1e1e1e",
+            color: "white",
+          }}
         />
         <input
           type="text"
@@ -74,8 +148,28 @@ const EquipmentPanel = ({ equipments, spaceId, setEquipments }) => {
           value={newEq.description}
           onChange={handleChange}
           placeholder="Description"
+          style={{
+            padding: "0.5rem",
+            borderRadius: "6px",
+            border: "1px solid #7BB493",
+            backgroundColor: "#1e1e1e",
+            color: "white",
+          }}
         />
-        <button type="submit">Ajouter</button>
+        <button
+          type="submit"
+          style={{
+            marginTop: "0.5rem",
+            backgroundColor: "#007bff",
+            color: "white",
+            border: "none",
+            padding: "6px 10px",
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+        >
+          Ajouter
+        </button>
       </form>
     </div>
   );
