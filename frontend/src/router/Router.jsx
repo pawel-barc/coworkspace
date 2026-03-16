@@ -26,8 +26,11 @@ const PrivateRoute = ({ children }) => {
 };
 
 const PublicRoute = ({ children }) => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  return !isAuthenticated ? children : <Navigate to="/" replace />;
+  const { isAuthenticated, role } = useAuthStore();
+  if (!isAuthenticated) return children;
+
+  if (role === "admin") return <Navigate to="/admin" replace />;
+  return <Navigate to="/" replace />;
 };
 
 const AdminRoute = ({ children }) => {
